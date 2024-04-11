@@ -55,11 +55,24 @@ function App() {
 
   // shopping cart
   const [cart, setCart] = useState([]);
+
+
+// fetching cart data from local storage
+useEffect(() => {
+  // Retrieve cart items from local storage on component mount
+  const storedCart = JSON.parse(localStorage.getItem('cart'));
+  if (storedCart) {
+    setCart(storedCart);
+  }
+}, []);
+
   const [cartPrice, setCartPrice] = useState(0);
   const handleAdd = (item) => {
     const doesIdExist = cart.some(cartItem => cartItem.id === item.id);
     if (!doesIdExist) {
-      setCart([...cart, item]);
+      const updatedCart = [...cart, item];
+      setCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
       setToastVisible(false);
     } else {
       setToastVisible(true);
@@ -67,7 +80,10 @@ function App() {
     }
   };
   const handleRemove = (item) => {
-    setCart(cart.filter((i) => i.id !== item));
+    const updatedCart = cart.filter((i) => i.id !== item)
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+
   };
 
 
